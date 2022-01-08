@@ -1,22 +1,32 @@
 ---
-	const response = await fetch('http://localhost:3000/products');
-	const data = await response.json();
+
 ---
-<script hoist>
-	console.log("Will Work - from the browser, DOM:", document);
-	console.log("Wont Work - from the browser, response:", response);
-	console.log("Wont Work - from the browser, data:", data);
+<script>
+	fetch('http://localhost:3000/products')
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not OK');
+			}
+			return response.json();
+		})
+		.then(data => {
+			createProductList(data)
+		})
+		.catch((error) => {
+  			console.error('Error:', error);
+		});
+
+	function createProductList(data) {
+		renderDiv = document.getElementById("productList")
+		data.forEach(productObject => console.log(productObject.title))
+	}
 </script>
 
-<p>{response.status}</p>
-<p>This won't update on refresh:</p>
-<ul>
-  {data.map((item) => (
-    <>
-      <li>Red {item.title}</li>
-    </>
-  ))}
-</ul>
+<!-- Instead of the Rails Notice feature, use some dynamic html based on the reponse's status -->
+
+<!-- Set your CSS up to use a scoped and utility css hybrid -->
+
+<div id="productList"></div>
 
 <!-- <table>
 	<tfoot>
