@@ -1,0 +1,103 @@
+---
+	const response = await fetch('http://localhost:3000/products');
+	const data = await response.json();
+---
+<script hoist>
+	console.log("Will Work - from the browser, DOM:", document);
+	console.log("Wont Work - from the browser, response:", response);
+	console.log("Wont Work - from the browser, data:", data);
+</script>
+
+<p>{response.status}</p>
+<p>This won't update on refresh:</p>
+<ul>
+  {data.map((item) => (
+    <>
+      <li>Red {item.title}</li>
+    </>
+  ))}
+</ul>
+
+<!-- <table>
+	<tfoot>
+		<tr>
+			<td colspan="3">
+				<%= link_to 'New Product', new_product_path %>
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+		<% @products.each do |product| %>
+			<tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+				<td class="image">
+					<%= image_tag(product.image_url, class: 'list_image') %>	
+				</td>
+				<td class="description">
+					<h1><%= product.title %></h1>
+					<p><%= truncate(strip_tags(product.description), length: 80) %></p>
+				</td>
+				<td class="actions">
+					<ul>
+						<li><%= link_to 'Show', product %></li>
+						<li><%= link_to 'Edit', edit_product_path(product) %></li>
+						<li><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></li>
+					</ul>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table> -->
+
+<style lang="scss">
+.products {
+    margin: 0;
+    padding: 0.5em;
+    a {
+      padding: 0.354em 0.5em;
+      border-radius: 0.354em;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    td {
+      padding: 0.5em;
+      margin: 0;
+    }
+    tr.list_line_odd {
+      background-color: #effeef;
+    }
+    td.image {
+      // Hide this on mobile devices
+      display: none;
+  
+      // Assume anything bigger than 30em
+      // is a non-mobile device and can 
+      // fit the image.
+      @media (min-width: 30em) {
+        display: block;
+        img {
+          height: 11.3em;
+        }
+      }
+    }
+    td.description {
+      h1 {
+        font-size: 1.4em;
+      }
+    }
+    td.actions {
+      ul {
+        padding: 0;
+        list-style: none;
+        li {
+          padding: 0.5em 0.5em;
+        }
+      }
+    }
+    tfoot {
+      td {
+        padding: 0.5em 0;
+      }
+    }
+}
+</style>
