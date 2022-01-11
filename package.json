@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "astro": "^0.22.3"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^2.0.1"
   }
 }
