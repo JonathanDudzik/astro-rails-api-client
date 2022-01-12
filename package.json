@@ -12,6 +12,7 @@
     "astro": "^0.22.3"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^2.0.1"
+    "@astrojs/renderer-lit": "^0.3.0",
+    "lit": "^2.1.1"
   }
 }

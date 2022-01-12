@@ -1,9 +1,13 @@
 ---
 // Component Imports
-import Products from '../components/Products.vue';
+// import '../components/products.js';
 
 let title = 'My Astro Site';
 ---
+<script>
+import '../components/products.js';
+</script>
+
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -32,7 +36,8 @@ let title = 'My Astro Site';
 			</div>
 		</header>
 
-		<Products client:load/>
+		
+		<my-element client:load />
 	</main>
 </body>
 </html>

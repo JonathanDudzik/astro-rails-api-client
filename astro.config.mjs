@@ -12,6 +12,6 @@ export default {
     // port: 3000,             // The port to run the dev server on.
   },
   renderers: [
-    "@astrojs/renderer-vue"
+    '@astrojs/renderer-lit'
   ],
 };
