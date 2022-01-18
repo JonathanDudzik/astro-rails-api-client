@@ -1,0 +1,10 @@
+<template>
+    <div>
+        <!-- <h1>Editing Product</h1>
+
+        <%= render 'form', product: @product %>
+
+        <%= link_to 'Show', @product %> |
+        <%= link_to 'Back', products_path %> -->
+    </div>
+</template>
