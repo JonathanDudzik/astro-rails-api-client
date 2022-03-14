@@ -1,5 +1,5 @@
 <template>
-  <form action="http://localhost:3000/products" method="POST">
+  <form action="http://localhost:3000/products" method="POST" enctype="multipart/form-data">
     <!-- <% if product.errors.any? %>
     <div id="error_explanation">
     <h2><%= pluralize(product.errors.count, "error") %>
@@ -15,6 +15,12 @@
     <div class="field">
       <label for="product_title">Title</label>
       <input type="text" name="title" id="product_title">
+    </div>
+
+    <div class="field">
+      <label for="image">Upload an image</label>
+      <!-- add accept attribute -->
+      <input type="file" name="image" id="image" multiple>
     </div>
 
     <div class="field">

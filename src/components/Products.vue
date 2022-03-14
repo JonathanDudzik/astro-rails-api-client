@@ -1,70 +1,40 @@
 <script>
 import { ref } from 'vue'
+import ProductShow from './ProductShow.vue'
+import { useFetch } from '../helpers/fetch'
+import truncate from '../helpers/truncate'
 
 export default {
+  components: { ProductShow },
   setup() {
-    const products = ref([])
+    const productID = ref(null)
 
-    fetch('http://localhost:3000/products')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not OK');
-        }
-        return response.json();
-      })
-      .then(data => {
-        products.value = data
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    const { data: products, error, isPending } = useFetch(
+      () => `http://localhost:3000/products`
+    );
 
-    // cycle service
+    // Cycle convert into a JS Class and extract for reuse
     let index = 0
-
     function cycleClassNames(...classNames) {
-      console.log("function")
-
       const value = classNames[index]
       index = next_index()
-      return value
 
       function next_index() {
-          return step_index(1)
+        return step_index(1)
       }
 
       function step_index(n) {
         return (index + n) % classNames.length
       }
-    }
-
-    function truncate(text, options = {}) {
-      const truncateAt = options.truncateAt ? options.truncateAt : 45;
-
-      if (text.length < truncateAt) {
-        return text
-      }
-
-      const omission = options.omission ? options.omission : " ";
-
-      const length_with_room_for_omission = truncateAt - omission.length
-
-      let stop;
-      if (options.separator && [...text].lastIndexOf(options.separator, length_with_room_for_omission) != -1) {
-        stop = [...text].lastIndexOf(options.separator, length_with_room_for_omission)
-      } else {
-        stop = length_with_room_for_omission
-      }
-
-      let testStr = {str: ""}
-      console.log(testStr.str)
-
-      // this regex will remove html tags from the text but is not a secure html sanitizer for untrusted end user submissions
-      return text.substring(0, stop).replace(/<\/?[^>]+(>|$)/g, "") + omission;
+      
+      return value
     }
 
     return { 
+      productID,
       products,
+      error,
+      isPending,
       truncate,
       cycleClassNames: cycleClassNames
     }
@@ -75,43 +45,51 @@ export default {
 <template>
   <h1>Products</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
+  <div v-if="isPending">
+    <p>Loading...</p>
+  </div>
   
-    <tbody>
-      <tr 
-        :class="cycleClassNames('dark', 'light')"
-        v-for="product in products" 
-        :key="product.id"
-      >
-        <td class='image'>
-          <img v-bind:src='`http://localhost:3000/assets/${product.image_url}`' class='list_image' />
-        </td>
-        <td>{{ product.title }}</td>
-        <!-- <td><%= truncate(strip_tags(product.description), length: 80) %></td> -->
-        <td>{{ truncate(product.description, {omission: "...", separator: ","}) }}</td>
-        <td>{{ product.price }}</td>
-        <!-- need to pass the product.id for the fetch URL -->
-        <td><a href='/show'>Show</a></td>
-        <!-- 
-        <td>{{ link_to 'Edit', edit_product_path(product) }}</td>
-        <td>{{ link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } }}</td> 
-        -->
-      </tr>
-    </tbody>
-  </table>
+  <div v-else-if="products">
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr 
+          :class="cycleClassNames('dark', 'light')"
+          v-for="product in products" 
+          :key="product.id"
+        >
+          <td class='image'>
+            <img v-bind:src='`http://localhost:3000/assets/${product.image_url}`' class='list_image' />
+          </td>
+          <td>{{ product.title }}</td>
+          <td>{{ truncate(product.description, {truncateAt: 55, omission: "..."}) }}</td>
+          <td>{{ product.price }}</td>
+          <td @click="productID = product.id">SHOW</td>
+          <!-- 
+          <td>{{ link_to 'Edit', edit_product_path(product) }}</td>
+          <td>{{ link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } }}</td> 
+          -->
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <a href="/create">New Product</a>
+    <br>
+    <ProductShow v-if="productID" :product-id="productID" />
+  </div>
 
-  <br>
+  <div v-else-if="error">
+    <p>Something went wrong: {{ error.messsage }}</p>
+  </div>
 
-  <a href="/create">New Product</a>
 </template>
 
 

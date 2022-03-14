@@ -3,6 +3,8 @@
 import Products from '../components/Products.vue';
 
 let title = 'Depot';
+
+Astro.props.title = title;
 ---
 
 <html lang="en">
@@ -16,7 +18,8 @@ let title = 'Depot';
 </head>
 <body>
 	<main>
-		<Products client:load/>
+		<p>Hello {Astro.props.title}!</p>
+		<Products client:load />
 	</main>
 </body>
 </html>
